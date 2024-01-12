@@ -1,0 +1,12 @@
+{
+  "name": "ti",
+  "version": "0.1.0",
+  "files": [
+    "ti_bg.wasm",
+    "ti.js",
+    "ti.d.ts"
+  ],
+  "module": "ti.js",
+  "types": "ti.d.ts",
+  "sideEffects": false
+}
