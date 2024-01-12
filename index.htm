@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=0.8"> 
+    <title>Sinclar Cambridge - TMS0801 Emulator</title>
+    <style>
+    .monospace {
+      font-family: monaco,monospace;
+    }
+    .monospace button {
+      font-family: monaco,monospace;
+    }
+    .label {
+      font-family: monaco,monospace;
+      font-size:19px;
+      color: #DDD;
+    }
+    .label td {
+      padding-bottom:0;
+      height: 30px;
+    }
+    
+    body {background-color:#555; color: #DDD}
+    a {background-color:#555; color: #DDD}
+    
+    td { text-align: center; white-space: nowrap; }
+    th { white-space: nowrap; }
+    
+    button { width:50px;height:40px;font-size:24px}
+    
+    .black { background-color: #444; color: #DDD }
+    .black:hover { background-color: #222 }
+
+    th { user-select: none }
+    
+    #display {
+      color: red;
+      background-color: black;
+      font-size:50px;
+      white-space: pre-wrap;
+      width: 270px;
+    }
+    
+    #digits {
+      margin:0;
+    }
+    
+    table#keyboard {
+      user-select: none;
+    }
+    table#keyboard td {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+    
+    .desktoponly {display:display;}
+
+    @media only screen and (max-width: 900px) {
+    .desktoponly {display:none;}
+    .main_flex {flex-direction: column}
+    }
+
+    .tiny {
+      font-size:6px;
+    }
+    
+    #pla td:nth-child(2n) {
+      background-color: #444;
+    }
+
+    
+    </style>
+    <script type="module">
+      import init from "./pkg/ti.js";
+      const wasm = await init();
+      wasm.run();
+    </script>
+    
+    <script>
+    pendingButtons = [];
+    //Map out all of the button clicks.
+    window.addEventListener("load", function() {
+      const keyboard = document.getElementById("keyboard");
+      const tbody = keyboard.children[0];
+      for(let i = 0; i < tbody.children.length; i++) {
+        const tr = tbody.children[i];
+        for(let j = 0; j < tr.children.length; j++) {
+          const td = tr.children[j];
+          const button = td.children[0];
+          if(button) {
+            const code = parseInt(button.getAttribute('code'));
+            if(code) {
+              button.addEventListener("mousedown", function(e) {
+                pendingButtons.push(code);
+              });
+              button.addEventListener("touchstart", function(e) {
+                pendingButtons.push(code);
+                e.preventDefault();
+              });
+            }
+          }
+        }
+      }
+      
+      document.onmouseup = function(e) {
+        pendingButtons.push(-1);
+      };
+      document.ontouchend = function(e) {
+        pendingButtons.push(-1);
+        e.preventDefault();
+      };
+      
+      document.onkeydown = function (e) {
+        e = e || window.event;
+        if(e.keyCode == 27) { //ESC
+          pendingButtons.push(512); //CE
+          pendingButtons.push(-1);
+        } else if(e.keyCode == 61 | e.keyCode == 13) { //=
+          pendingButtons.push(256);
+          pendingButtons.push(-1);
+        } else if(e.keyCode == 48 || e.keyCode == 96) { //0
+          pendingButtons.push(2);
+          pendingButtons.push(-1);
+        } else if(e.keyCode == 49 || e.keyCode == 97) { //1
+          pendingButtons.push(513);
+          pendingButtons.push(-1);
+        } else if(e.keyCode == 50 || e.keyCode == 98) { //2
+          pendingButtons.push(257);
+          pendingButtons.push(-1);
+        } else if(e.keyCode == 51 || e.keyCode == 99) { //3
+          pendingButtons.push(129);
+          pendingButtons.push(-1);
+        } else if(e.keyCode == 52 || e.keyCode == 100) { //4
+          pendingButtons.push(65);
+          pendingButtons.push(-1);
+        } else if(e.keyCode == 53 || e.keyCode == 101) { //5
+          pendingButtons.push(33);
+          pendingButtons.push(-1);
+        } else if(e.keyCode == 54 || e.keyCode == 102) { //6
+          pendingButtons.push(17);
+          pendingButtons.push(-1);
+        } else if(e.keyCode == 55 || e.keyCode == 103) { //7
+          pendingButtons.push(9);
+          pendingButtons.push(-1);
+        } else if(e.keyCode == 56 || e.keyCode == 104) { //8
+          pendingButtons.push(5);
+          pendingButtons.push(-1);
+        } else if(e.keyCode == 57 || e.keyCode == 105) { //9
+          pendingButtons.push(3);
+          pendingButtons.push(-1);
+        } else if(e.keyCode == 42 || e.keyCode == 106) { //*
+          pendingButtons.push(32);
+          pendingButtons.push(-1);
+        } else if(e.keyCode == 43 || e.keyCode == 107) { //+
+          pendingButtons.push(128);
+          pendingButtons.push(-1);
+        } else if(e.keyCode == 45 || e.keyCode == 109) { //-
+          pendingButtons.push(64);
+          pendingButtons.push(-1);
+        } else if(e.keyCode == 47 || e.keyCode == 111) { //divide
+          pendingButtons.push(16); event.preventDefault(); return false;
+          pendingButtons.push(-1);
+        } else if(e.keyCode == 190 || e.keyCode == 110) { //.
+          pendingButtons.push(4);
+          pendingButtons.push(-1);
+        }
+      };
+    }, false);
+
+    //This function will be called by the WASM code.
+    function getPendingButton() {
+      let pending = pendingButtons.shift();
+      if(pending) {
+        return pending;
+      }
+    }
+    </script>
+  </head>
+  <body>
+  <div style="display: flex" class="main_flex">
+    <aside class="monospace desktoponly">
+    <table id="address">
+      <tr><td>Current Address</td><td>000</td></tr>
+    </table>
+    <div style="height:15px"></div>
+    <table id="flags">
+      <tr><td>Flags</td><td>A</td><td>9</td><td>8</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td></tr>
+      <tr><td>A</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td></tr>
+      <tr><td>B</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td></tr>
+    </table>
+    <div style="height:15px"></div>
+    <table id="registers">
+      <tr><td>Register</td><th colspan=9>Mantissa</td><th colspan=2>Exponent</td>
+      <tr><td>A</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+      <tr><td>B</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+      <tr><td>C</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+    </table>
+    </aside>
+    <article style="flex: 1; display:flex; flex-direction: column; align-items: center; padding-right: 20px">
+      <div id="display" class="monospace">         </div>
+      <div style="font-size:24px; user-select: none" class="monospace"><br>Sinclair Cambridge<br>Prototype Model<br><br></div>
+      <table id="keyboard">
+        <tr valign="bottom" class="label"><td><label for="co">C</td><td><label for="ce">CE</label></td></tr>
+        <tr><td><button code="8" id="co" class="black"></button></td><td><button id="ce" code="512" class="black"></button></td></tr>
+        <tr valign="bottom" class="label"><td><label for="n7">7</td><td><label for="n8">8</label></td><td><label for="n9">9</label></td><td><label for="dv">&divide;</label></td></tr>
+        <tr><td><button code="9" id="n7" class="black"></button></td><td><button id="n8" code="5" class="black"></button></td><td><button id="n9" code="3" class="black"></button></td><td><button id="dv" code="16" class="black"></button></td></tr>
+        <tr valign="bottom" class="label"><td><label for="n4">4</td><td><label for="n5">5</label></td><td><label for="n6">6</label></td><td><label for="tm">&times;</label></td></tr>
+        <tr><td><button code="65" id="n4" class="black"></button></td><td><button id="n5" code="33" class="black"></button></td><td><button id="n6" code="17" class="black"></button></td><td><button id="tm" code="32" class="black"></button></td></tr>
+        <tr valign="bottom" class="label"><td><label for="n1">1</td><td><label for="n2">2</label></td><td><label for="n3">3</label></td><td><label for="ms">&minus;</label></td></tr>
+        <tr><td><button code="513" id="n1" class="black"></button></td><td><button id="n2" code="257" class="black"></button></td><td><button id="n3" code="129" class="black"></button></td><td><button id="ms" code="64" class="black"></button></td></tr>
+        <tr valign="bottom" class="label"><td><label for="dt">&bull;</td><td><label for="n0">0</label></td><td><label for="eq">=</label></td><td><label for="ps">&plus;</label></td></tr>
+        <tr><td><button code="4" id="dt" class="black"></button></td><td><button id="n0" code="2" class="black"></button></td><td><button id="eq" code="256" class="black"></button></td><td><button id="ps" code="128" class="black"></button></td></tr>
+      </table>
+    </article>
+    <aside style="flex: 1">
+      <h4>What is this?</h4>
+      <p>This is an emulation of the <a href="https://en.wikipedia.org/wiki/Sinclair_Cambridge">Sinclair Cambridge Type 2 (Prototype Model)</a>, introduced in 1973, it was the cheapest pocket calculator of the time, built with a TMS-0801, one of Texas Instrument's first "calculators on a chip".</p>
+
+      <p>I extracted the ROM directly off of a die of the chip. You can read more about that <a href="https://veniamin-ilmer.github.io/decoding_rom/">here</a>.</p>
+
+      <h4>Programmable Logic Array (PLA)</h4>
+      
+      <p>Texas Instruments was unique for including multple PLAs into their chip. This was like microcode added in addition to the ROM.</p>
+      
+      <p>This emulator reads the PLA too. Here is the ALU PLA, which sets which opcode does which math operation:</p>
+      
+      <table border=1 id="pla">
+        <tr><td>Opcode</td><td>Shift Right</td><td>Shift Left</td><td>Subtract</td><td>Hex</td><td>A</td><td>C</td><td>B</td><td>K</td><td>A=</td><td>C=</td><td>B=</td><td>A&#x21C4;B</td><td>Wait</td><th>Result</th></tr>
+        <tr><td>00</td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td></td><td></td><th>A = A + B</th></tr>
+        <tr><td>01</td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td>&check;</td><td></td><td></td><td></td><td></td><th>A = A + K</th></tr>
+        <tr><td>02</td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td></td><th>C = A + K</th></tr>
+        <tr><td>03</td><td></td><td></td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td></td><td></td><th>A = B</th></tr>
+        <tr><td>04</td><td></td><td></td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td></td><td></td><td></td><th>C = B</th></tr>
+        <tr><td>05</td><td></td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td>&check;</td><td></td><td></td><td></td><td></td><th>A = C + K</th></tr>
+        <tr><td>06</td><td></td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td></td><td></td><th>B = C + K</th></tr>
+        <tr><td>07</td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td></td><td></td><th>A = A - B</th></tr>
+        <tr><td>08</td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td></td><td></td><td></td><th>C = A - B</th></tr>
+        <tr><td>09</td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td>&check;</td><td></td><td></td><td></td><td></td><th>A = A - K</th></tr>
+        <tr><td>10</td><td></td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td>&check;</td><td></td><td></td><td>&check;</td><td></td><td></td><td></td><th>C = C - B</th></tr>
+        <tr><td>11</td><td></td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td></td><th>C = C - K</th></tr>
+        <tr><td>12</td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td></td><td></td><td></td><td></td><th>A - B</th></tr>
+        <tr><td>13</td><td></td><td></td><td>&check;</td><td>&check;</td><td>&check;</td><td></td><td></td><td>&check;</td><td></td><td></td><td></td><td></td><td></td><th>Hex A - K</th></tr>
+        <tr><td>14</td><td></td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td>&check;</td><td></td><td></td><td></td><td></td><td></td><td></td><th>C - B</th></tr>
+        <tr><td>15</td><td></td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td></td><td></td><td></td><th>C - K</th></tr>
+        <tr><td>16</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>&check;</td><td>&check;</td><td></td><td></td><td></td><td></td><th>A = K</th></tr>
+        <tr><td>17</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td></td><td></td><th>B = K</th></tr>
+        <tr><td>18</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td></td><th>C = K</th></tr>
+        <tr><td>19</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><th>A&#x21C4;B</th></tr>
+        <tr><td>20</td><td></td><td>&check;</td><td></td><td>&check;</td><td>&check;</td><td></td><td></td><td></td><td>&check;</td><td></td><td></td><td></td><td></td><th>A = A << 4</th></tr>
+        <tr><td>21</td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td></td><td></td><td></td><td>&check;</td><td></td><td></td><th>B = B << 4</th></tr>
+        <tr><td>22</td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td></td><td>&check;</td><td></td><td></td><td></td><th>C = C << 4</th></tr>
+        <tr><td>23</td><td>&check;</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td></td><td></td><td></td><th>A = A >> 4</th></tr>
+        <tr><td>24</td><td>&check;</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td></td><th>B = B >> 4</th></tr>
+        <tr><td>25</td><td>&check;</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td></td><td></td><th>C = C >> 4</th></tr>
+        <tr><td>26</td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td>&check;</td><td></td><td></td><td></td><td>&check;</td><th>Wait A = A + K</th></tr>
+        <tr><td>27</td><td></td><td></td><td></td><td>&check;</td><td>&check;</td><td></td><td></td><td>&check;</td><td>&check;</td><td></td><td></td><td></td><td></td><th>Hex A = A + K</th></tr>
+        <tr><td>28</td><td></td><td></td><td>&check;</td><td>&check;</td><td>&check;</td><td></td><td></td><td>&check;</td><td>&check;</td><td></td><td></td><td></td><td></td><th> Hex A = A - K</th></tr>
+        <tr><td>29</td><td></td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td></td><th>C = C + K</th></tr>
+        <tr><td>30</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><th>No Operation</th></tr>
+        <tr><td>31</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><th>No Operation</th></tr>
+        <tr><td>Opcode</td><td>Shift Right</td><td>Shift Left</td><td>Subtract</td><td>Hex</td><td>A</td><td>C</td><td>B</td><td>K</td><td>A=</td><td>C=</td><td>B=</td><td>A&#x21C4;B</td><td>Wait</td><th>Result</th></tr>
+      </table>
+      <p>When the result isn't being saved anywhere, then only the carry/borrow flag is set.</p>
+      <p>Hex means the operation is hexadecimal. No hex means the operation is decimal (BCD).</p>
+
+      <h4>Source code</h4>
+      
+      <ul>
+        <li><a href="https://github.com/veniamin-ilmer/sinclair_cambridge">Sinclair Cambridge GUI</a></li>
+        <li><a href="https://github.com/veniamin-ilmer/chips">Chips library</a></li>
+      </ul>
+
+      <h4>Acknowledgments / Resources</h4>
+      This emulation would be lacking without the resources below:<br />
+      <ul>
+        <li><a href="https://patents.google.com/patent/US3934233">TMS-0801 Patent</a></li>
+        <li><a href="https://siliconpr0n.org/map/ti/tms0801nc/mcmaster_mz_mit20x/">Image of TMS-0801 die</a></li>
+        <li><a href="http://righto.com/ti">Ken Shirrif's Emulator</a>
+      </ul>
+    </aside>
+  </div>
+  
+  </body>
+</html>

@@ -1,0 +1,30 @@
+[package]
+name = "ti"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wasm-bindgen = "*"
+chips = { path = "../chips" }
+log = "*"
+arbitrary-int = "*"
+console_error_panic_hook = "0.1.7"
+js-sys = "0.3.66"
+wasm-bindgen-futures = "*"
+wasm-log = "0.3.1"
+
+[dependencies.web-sys]
+version = "0.3.66"
+features = [
+  'Window',
+  'Document',
+  'Element',
+  'HtmlCollection',
+  'HtmlInputElement',
+  'DomTokenList',
+]
