@@ -33,6 +33,7 @@
     .black:hover { background-color: #222 }
 
     th { user-select: none }
+    #pla th { user-select: text }
     
     #display {
       color: red;
@@ -226,23 +227,23 @@
       <p>This emulator reads the PLA too. Here is the ALU PLA, which sets which opcode does which math operation:</p>
       
       <table border=1 id="pla">
-        <tr><td>Opcode</td><td>&gt;&gt;</td><td>&lt;&lt;</td><td>&minus;</td><td>Hex</td><td>A</td><td>C</td><td>B</td><td>K</td><td>A=</td><td>C=</td><td>B=</td><td>A&#x21C4;B</td><td>Wait</td><th>Result</th></tr>
-        <tr><td>00</td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td></td><td></td><th>A = A + B</th></tr>
-        <tr><td>01</td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td>&check;</td><td></td><td></td><td></td><td></td><th>A = A + K</th></tr>
-        <tr><td>02</td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td></td><th>C = A + K</th></tr>
+        <tr><td>Opcode</td><td>&gt;&gt;</td><td>&lt;&lt;</td><td>&minus;</td><td>Hex</td><td>C</td><td>A</td><td>B</td><td>K</td><td>A=</td><td>C=</td><td>B=</td><td>A&#x21C4;B</td><td>Wait</td><th>Result</th></tr>
+        <tr><td>00</td><td></td><td></td><td></td><td></td><td></td><td>&check;</td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td></td><td></td><th>A = A + B</th></tr>
+        <tr><td>01</td><td></td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td>&check;</td><td></td><td></td><td></td><td></td><th>A = A + K</th></tr>
+        <tr><td>02</td><td></td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td></td><th>C = A + K</th></tr>
         <tr><td>03</td><td></td><td></td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td></td><td></td><th>A = B</th></tr>
         <tr><td>04</td><td></td><td></td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td></td><td></td><td></td><th>C = B</th></tr>
-        <tr><td>05</td><td></td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td>&check;</td><td></td><td></td><td></td><td></td><th>A = C + K</th></tr>
-        <tr><td>06</td><td></td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td></td><td></td><th>B = C + K</th></tr>
-        <tr><td>07</td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td></td><td></td><th>A = A - B</th></tr>
-        <tr><td>08</td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td></td><td></td><td></td><th>C = A - B</th></tr>
-        <tr><td>09</td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td>&check;</td><td></td><td></td><td></td><td></td><th>A = A - K</th></tr>
-        <tr><td>10</td><td></td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td>&check;</td><td></td><td></td><td>&check;</td><td></td><td></td><td></td><th>C = C - B</th></tr>
-        <tr><td>11</td><td></td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td></td><th>C = C - K</th></tr>
-        <tr><td>12</td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td></td><td></td><td></td><td></td><th>A - B</th></tr>
-        <tr><td>13</td><td></td><td></td><td>&check;</td><td>&check;</td><td>&check;</td><td></td><td></td><td>&check;</td><td></td><td></td><td></td><td></td><td></td><th>Hex A - K</th></tr>
-        <tr><td>14</td><td></td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td>&check;</td><td></td><td></td><td></td><td></td><td></td><td></td><th>C - B</th></tr>
-        <tr><td>15</td><td></td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td></td><td></td><td></td><th>C - K</th></tr>
+        <tr><td>05</td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td>&check;</td><td></td><td></td><td></td><td></td><th>A = C + K</th></tr>
+        <tr><td>06</td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td></td><td></td><th>B = C + K</th></tr>
+        <tr><td>07</td><td></td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td></td><td></td><th>A = A - B</th></tr>
+        <tr><td>08</td><td></td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td>&check;</td><td></td><td></td><td>&check;</td><td></td><td></td><td></td><th>C = A - B</th></tr>
+        <tr><td>09</td><td></td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td>&check;</td><td></td><td></td><td></td><td></td><th>A = A - K</th></tr>
+        <tr><td>10</td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td></td><td></td><td></td><th>C = C - B</th></tr>
+        <tr><td>11</td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td></td><th>C = C - K</th></tr>
+        <tr><td>12</td><td></td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td>&check;</td><td></td><td></td><td></td><td></td><td></td><td></td><th>A - B</th></tr>
+        <tr><td>13</td><td></td><td></td><td>&check;</td><td>&check;</td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td></td><td></td><td></td><th>Hex A - K</th></tr>
+        <tr><td>14</td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td></td><td></td><td></td><td></td><th>C - B</th></tr>
+        <tr><td>15</td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td></td><td></td><td></td><td></td><td></td><th>C - K</th></tr>
         <tr><td>16</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>&check;</td><td>&check;</td><td></td><td></td><td></td><td></td><th>A = K</th></tr>
         <tr><td>17</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td></td><td></td><th>B = K</th></tr>
         <tr><td>18</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td></td><th>C = K</th></tr>
@@ -253,13 +254,13 @@
         <tr><td>23</td><td>&check;</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td></td><td></td><td></td><th>A = A >> 4</th></tr>
         <tr><td>24</td><td>&check;</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td></td><th>B = B >> 4</th></tr>
         <tr><td>25</td><td>&check;</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td></td><td></td><th>C = C >> 4</th></tr>
-        <tr><td>26</td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td>&check;</td><td></td><td></td><td></td><td>&check;</td><th>Wait A = A + K</th></tr>
-        <tr><td>27</td><td></td><td></td><td></td><td>&check;</td><td>&check;</td><td></td><td></td><td>&check;</td><td>&check;</td><td></td><td></td><td></td><td></td><th>Hex A = A + K</th></tr>
-        <tr><td>28</td><td></td><td></td><td>&check;</td><td>&check;</td><td>&check;</td><td></td><td></td><td>&check;</td><td>&check;</td><td></td><td></td><td></td><td></td><th> Hex A = A - K</th></tr>
-        <tr><td>29</td><td></td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td></td><th>C = C + K</th></tr>
+        <tr><td>26</td><td></td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td>&check;</td><td></td><td></td><td></td><td>&check;</td><th>Wait A = A + K</th></tr>
+        <tr><td>27</td><td></td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td>&check;</td><td>&check;</td><td></td><td></td><td></td><td></td><th>Hex A = A + K</th></tr>
+        <tr><td>28</td><td></td><td></td><td>&check;</td><td>&check;</td><td></td><td>&check;</td><td></td><td>&check;</td><td>&check;</td><td></td><td></td><td></td><td></td><th> Hex A = A - K</th></tr>
+        <tr><td>29</td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td></td><th>C = C + K</th></tr>
         <tr><td>30</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><th>No Operation</th></tr>
         <tr><td>31</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><th>No Operation</th></tr>
-        <tr><td>Opcode</td><td>&gt;&gt;</td><td>&lt;&lt;</td><td>&minus;</td><td>Hex</td><td>A</td><td>C</td><td>B</td><td>K</td><td>A=</td><td>C=</td><td>B=</td><td>A&#x21C4;B</td><td>Wait</td><th>Result</th></tr>
+        <tr><td>Opcode</td><td>&gt;&gt;</td><td>&lt;&lt;</td><td>&minus;</td><td>Hex</td><td>C</td><td>A</td><td>B</td><td>K</td><td>A=</td><td>C=</td><td>B=</td><td>A&#x21C4;B</td><td>Wait</td><th>Result</th></tr>
       </table>
       <p>When the result isn't being saved anywhere, then only the carry/borrow flag is set.</p>
       <p>Hex means the operation is hexadecimal. No hex means the operation is decimal (BCD).</p>
