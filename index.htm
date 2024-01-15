@@ -226,7 +226,7 @@
       <p>This emulator reads the PLA too. Here is the ALU PLA, which sets which opcode does which math operation:</p>
       
       <table border=1 id="pla">
-        <tr><td>Opcode</td><td>Shift Right</td><td>Shift Left</td><td>Subtract</td><td>Hex</td><td>A</td><td>C</td><td>B</td><td>K</td><td>A=</td><td>C=</td><td>B=</td><td>A&#x21C4;B</td><td>Wait</td><th>Result</th></tr>
+        <tr><td>Opcode</td><td>&gt;&gt;</td><td>&lt;&lt;</td><td>&minus;</td><td>Hex</td><td>A</td><td>C</td><td>B</td><td>K</td><td>A=</td><td>C=</td><td>B=</td><td>A&#x21C4;B</td><td>Wait</td><th>Result</th></tr>
         <tr><td>00</td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td></td><td></td><th>A = A + B</th></tr>
         <tr><td>01</td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td>&check;</td><td></td><td></td><td></td><td></td><th>A = A + K</th></tr>
         <tr><td>02</td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td></td><th>C = A + K</th></tr>
@@ -259,7 +259,7 @@
         <tr><td>29</td><td></td><td></td><td></td><td></td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td>&check;</td><td></td><td></td><td></td><th>C = C + K</th></tr>
         <tr><td>30</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><th>No Operation</th></tr>
         <tr><td>31</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><th>No Operation</th></tr>
-        <tr><td>Opcode</td><td>Shift Right</td><td>Shift Left</td><td>Subtract</td><td>Hex</td><td>A</td><td>C</td><td>B</td><td>K</td><td>A=</td><td>C=</td><td>B=</td><td>A&#x21C4;B</td><td>Wait</td><th>Result</th></tr>
+        <tr><td>Opcode</td><td>&gt;&gt;</td><td>&lt;&lt;</td><td>&minus;</td><td>Hex</td><td>A</td><td>C</td><td>B</td><td>K</td><td>A=</td><td>C=</td><td>B=</td><td>A&#x21C4;B</td><td>Wait</td><th>Result</th></tr>
       </table>
       <p>When the result isn't being saved anywhere, then only the carry/borrow flag is set.</p>
       <p>Hex means the operation is hexadecimal. No hex means the operation is decimal (BCD).</p>

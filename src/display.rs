@@ -19,7 +19,7 @@ impl Display {
   }
 
   pub fn run_refresh_cycle(&mut self, chip: &tms0800::TMS0800) {
-    let mut buffer = Vec::with_capacity(15);
+    let mut buffer = Vec::with_capacity(11);
     let mut a = chip.alu.a.clone();
     let mut b = chip.alu.b.clone();
     let direction = shifter::Direction::Left;
