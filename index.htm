@@ -167,7 +167,36 @@
           pendingButtons.push(-1);
         }
       };
+      labelsTriggerButtons();
     }, false);
+
+    function labelsTriggerButtons() {
+      var labels = document.querySelectorAll('label');
+
+      // Add mouseover event listener to all labels
+      labels.forEach(function (label) {
+        label.addEventListener('mousedown', function () {
+          // Get the associated button ID from the "for" attribute
+          var buttonId = label.getAttribute('for');
+          var button = document.getElementById(buttonId);
+
+          // Check if the button exists before triggering the mousedown event
+          if (button) {
+            // Manually trigger the mousedown event on the button
+            triggerEvent(button, 'mousedown');
+          }
+        });
+
+        // Function to manually trigger an event on an element
+        function triggerEvent(element, eventType) {
+          var event = new Event(eventType, {
+            bubbles: true,
+            cancelable: true,
+          });
+          element.dispatchEvent(event);
+        }
+      });
+    }
 
     //This function will be called by the WASM code.
     function getPendingButton() {
