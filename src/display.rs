@@ -1,4 +1,4 @@
-use chips::cpu::tms0800;
+use chips::tms0800;
 use chips::shifter;
 
 pub(super) struct Display {

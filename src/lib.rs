@@ -3,7 +3,7 @@
 #![forbid(unsafe_code)]
 
 use wasm_bindgen::prelude::wasm_bindgen;
-use chips::cpu::TMS0800;
+use chips::tms0800::TMS0800;
 
 mod display;
 mod keyboard;

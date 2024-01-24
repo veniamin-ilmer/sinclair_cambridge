@@ -1,5 +1,5 @@
 use wasm_bindgen::{JsValue, JsCast};
-use chips::cpu::tms0800;
+use chips::tms0800;
 
 pub(super) struct Keyboard {
   pending_button_var: wasm_bindgen::JsValue,
@@ -24,9 +24,11 @@ impl Keyboard {
       let code = click_float.round(); //Wish there were a way to get an integer directly without needing to go through a float...
       
       if code == -1.0 { //Depress event
-        chip.current_keypress = 0;
+        chip.control.current_keypress = 0;
+      } else if code == 512.0 { //Restart
+        chip.control.pc = Default::default(); //This seems to be hardwired...
       } else {
-        chip.current_keypress = code as u16;
+        chip.control.current_keypress = code as u16;
       }
     }
   }

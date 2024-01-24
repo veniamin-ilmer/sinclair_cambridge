@@ -1,4 +1,4 @@
-use chips::cpu::{tms0800,tms_alu};
+use chips::tms0800;
 use chips::shifter;
 
 
@@ -6,8 +6,8 @@ pub struct SidePanel {
   address: Option<web_sys::HtmlCollection>,
   registers: Option<web_sys::HtmlCollection>,
   flags: Option<web_sys::HtmlCollection>,
-  current_registers: [tms_alu::Register; 3],
-  current_flags: [tms0800::Flag; 2],
+  current_registers: [tms0800::alu::Register; 3],
+  current_flags: [tms0800::control::Flag; 2],
 }
 
 impl SidePanel {
@@ -25,28 +25,28 @@ impl SidePanel {
   }
   
   pub fn run_refresh_cycle(&mut self, chip: &tms0800::TMS0800) {
-    self.print_address(&chip);
-    self.print_flags(&chip);
+    self.print_address(&chip.control);
+    self.print_flags(&chip.control);
     self.print_registers(&chip.alu);
   }
 
-  fn print_address(&self, chip: &tms0800::TMS0800) {
+  fn print_address(&self, control: &tms0800::control::ControlUnit) {
     if let Some(tr_list) = &self.address {
       let td_list = tr_list.item(0).expect("can't get tr").children();
       if let Some(td) = td_list.item(1) {
-        td.set_text_content(Some(&format!("{:03X}", chip.pc.value())));
+        td.set_text_content(Some(&format!("{:03X}", control.pc.value())));
       }
     }
   }
 
-  fn print_flags(&mut self, chip: &tms0800::TMS0800) {
+  fn print_flags(&mut self, control: &tms0800::control::ControlUnit) {
     if let Some(tr_list) = &self.flags {
-      print_flag(&mut self.current_flags[0], tr_list, chip.fa, 1);
-      print_flag(&mut self.current_flags[1], tr_list, chip.fb, 2);
+      print_flag(&mut self.current_flags[0], tr_list, control.fa, 1);
+      print_flag(&mut self.current_flags[1], tr_list, control.fb, 2);
     }
   }
   
-  fn print_registers(&mut self, alu: &tms_alu::ALU) {
+  fn print_registers(&mut self, alu: &tms0800::alu::ALU) {
     if let Some(tr_list) = &self.registers {
       print_reg(&mut self.current_registers[0], tr_list, alu.a, 1);
       print_reg(&mut self.current_registers[1], tr_list, alu.b, 2);
@@ -55,7 +55,7 @@ impl SidePanel {
   }
 }
 
-fn print_flag(current_flag: &mut tms0800::Flag, tr_list: &web_sys::HtmlCollection, mut new_flag: tms0800::Flag, row_index: u32) {
+fn print_flag(current_flag: &mut tms0800::control::Flag, tr_list: &web_sys::HtmlCollection, mut new_flag: tms0800::control::Flag, row_index: u32) {
   if new_flag != *current_flag {
     let td_list = tr_list.item(row_index).expect("can't get tr").children();
     for i in 0..11 {
@@ -76,7 +76,7 @@ fn print_flag(current_flag: &mut tms0800::Flag, tr_list: &web_sys::HtmlCollectio
 
 
 
-fn print_reg(current_reg: &mut tms_alu::Register, tr_list: &web_sys::HtmlCollection, mut new_reg: tms_alu::Register, row_index: u32) {
+fn print_reg(current_reg: &mut tms0800::alu::Register, tr_list: &web_sys::HtmlCollection, mut new_reg: tms0800::alu::Register, row_index: u32) {
   if new_reg != *current_reg {
     let td_list = tr_list.item(row_index).expect("can't get tr").children();
     for i in 0..11 {
