@@ -27,7 +27,7 @@ pub async fn run() {
   std::panic::set_hook(Box::new(console_error_panic_hook::hook)); //Panics appear more descriptive in the browser console.
 
   //wasm_log::init(wasm_log::Config::new(log::Level::Trace));
-  let mut chip = TMS0800::new(rom::decode(), rom::ALU_CONFIG, rom::WORD_SELECTS, rom::CONSTANTS);
+  let mut chip = TMS0800::new(rom::decode(), rom::ALU_OPCODES, rom::WORD_SELECTS, rom::CONSTANTS);
   let mut side_panel = side_panel::SidePanel::new();
   let keyboard = keyboard::Keyboard::new();
   let mut display = display::Display::new();
